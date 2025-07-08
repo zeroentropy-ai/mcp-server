@@ -52,7 +52,7 @@ async def get_page_info(collection_name: str, path: str, page_index: int, includ
     return response.page.model_dump()
 
 @mcp.tool()
-async def get_top_documents(collection_name: str, query: str, k: int, filter: dict | None = None, include_metadata: bool = False, reranker: str | None = None) -> list[str]:
+async def get_top_documents(collection_name: str, query: str, k: int, filter: dict | None = None, include_metadata: bool = False, reranker: str | None = None) -> list[dict]:
     response = zeroentropy_client.queries.top_documents(
         collection_name=collection_name, 
         query=query, 
@@ -64,7 +64,7 @@ async def get_top_documents(collection_name: str, query: str, k: int, filter: di
     return [result.model_dump() for result in response.results]
 
 @mcp.tool()
-async def get_top_pages(collection_name: str, query: str, k: int, filter: dict | None = None, include_content: bool = False, latency_mode: str | None = None) -> list[dict]:
+async def get_top_pages(collection_name: str, query: str, k: int, filter: dict | None = None, include_content: bool = False, latency_mode: str | None = "low") -> list[dict]:
     response = zeroentropy_client.queries.top_pages(
         collection_name=collection_name, 
         query=query, 

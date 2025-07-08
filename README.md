@@ -9,5 +9,11 @@ uv sync
 *Run*
 
 ```bash
-uv run main.py
+uv run server.py
+```
+
+To run the MCP server from browser:
+
+```bash
+mcp dev server.py
 ```
