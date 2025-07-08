@@ -29,13 +29,15 @@ async def add_document(collection_name: str, path: str, content: dict) -> None:
 
 @mcp.tool()
 async def get_document_info(collection_name: str, path: str, include_content: bool = False) -> dict:
-    zeroentropy_client.documents.get_info(collection_name=collection_name, path=path, include_content=include_content)
+    response = zeroentropy_client.documents.get_info(collection_name=collection_name, path=path, include_content=include_content)
+    return response.document
 
 @mcp.tool()
 async def get_document_info_list(collection_name: str, limit: int = 100, path_prefix: str | None = None, path_gt: str | None = None) -> list[str]:
-    zeroentropy_client.documents.get_info_list(
+    response = zeroentropy_client.documents.get_info_list(
         collection_name=collection_name, limit=limit, path_prefix=path_prefix, path_gt=path_gt
     )
+    return response.documents
 
 @mcp.tool()
 async def delete_document(collection_name: str, path: str) -> None:
@@ -44,7 +46,9 @@ async def delete_document(collection_name: str, path: str) -> None:
 
 @mcp.tool()
 async def get_page_info(collection_name: str, path: str, page_index: int, include_content: bool = False) -> dict:
-    zeroentropy_client.documents.get_page_info(collection_name=collection_name, path=path, page_index=page_index, include_content=include_content)
+    response = zeroentropy_client.documents.get_page_info(collection_name=collection_name, path=path, page_index=page_index, include_content=include_content)
+    return response.page
+
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
