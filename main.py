@@ -2,6 +2,8 @@ from mcp.server.fastmcp import FastMCP
 from zeroentropy import ZeroEntropy
 from dotenv import load_dotenv
 from os import getenv
+
+from models import DocumentInfo
 load_dotenv()
 
 mcp = FastMCP("zeroentropy")
@@ -28,16 +30,17 @@ async def add_document(collection_name: str, path: str, content: dict) -> None:
     zeroentropy_client.documents.add(collection_name=collection_name, path=path, content=content)
 
 @mcp.tool()
-async def get_document_info(collection_name: str, path: str, include_content: bool = False) -> dict:
+async def get_document_info(collection_name: str, path: str, include_content: bool = False) -> DocumentInfo:
     response = zeroentropy_client.documents.get_info(collection_name=collection_name, path=path, include_content=include_content)
-    return response.document
+    return DocumentInfo(**response.document.model_dump())
 
 @mcp.tool()
-async def get_document_info_list(collection_name: str, limit: int = 100, path_prefix: str | None = None, path_gt: str | None = None) -> list[str]:
+async def get_document_info_list(collection_name: str, limit: int = 1024, path_prefix: str | None = None, path_gt: str | None = None) -> DocumentInfo:
     response = zeroentropy_client.documents.get_info_list(
         collection_name=collection_name, limit=limit, path_prefix=path_prefix, path_gt=path_gt
     )
-    return response.documents
+    
+    return DocumentInfo(**response.documents[0].model_dump())
 
 @mcp.tool()
 async def delete_document(collection_name: str, path: str) -> None:
