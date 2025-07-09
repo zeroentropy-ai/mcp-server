@@ -25,7 +25,7 @@ def register_collection_tools(mcp: FastMCP, zeroentropy_client: ZeroEntropy):
         return response.collection_names
 
     @mcp.tool()
-    async def add_collection(collection_name: str) -> None:
+    async def add_collection(collection_name: str) -> dict:
         """
         Add a new collection
         Args:
@@ -43,7 +43,7 @@ def register_collection_tools(mcp: FastMCP, zeroentropy_client: ZeroEntropy):
         }
 
     @mcp.tool()
-    async def delete_collection(collection_name: str) -> None:
+    async def delete_collection(collection_name: str) -> dict:
         """
         Delete a collection
         Args:

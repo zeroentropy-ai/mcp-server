@@ -5,7 +5,7 @@ def register_document_tools(mcp: FastMCP, zeroentropy_client: ZeroEntropy):
     """Register document-related tools with the MCP server."""
 
     @mcp.tool()
-    async def add_document(collection_name: str, path: str, content: dict) -> None:
+    async def add_document(collection_name: str, path: str, content: dict) -> dict:
         """
         Add a new document to a collection.
         
@@ -71,11 +71,30 @@ def register_document_tools(mcp: FastMCP, zeroentropy_client: ZeroEntropy):
 
     @mcp.tool()
     async def get_document_info(collection_name: str, path: str, include_content: bool = False) -> dict:
+        """
+        Get information about a document
+        Args:
+            collection_name (str): The name of the collection to get the document from.
+            path (str): The path of the document to get the information about.
+            include_content (bool): Whether to include the content of the document. Defaults to False.
+        Returns:
+            dict: A dictionary with the document information
+        """
         response = zeroentropy_client.documents.get_info(collection_name=collection_name, path=path, include_content=include_content)
         return response.document.model_dump()
 
     @mcp.tool()
     async def get_document_info_list(collection_name: str, limit: int = 1024, path_prefix: str | None = None, path_gt: str | None = None) -> list[dict]:
+        """
+        Get a list of documents in a collection
+        Args:
+            collection_name (str): The name of the collection to get the document list from.
+            limit (int): The maximum number of documents to return. Defaults to 1024.
+            path_prefix (str | None): All documents returned will have a path that starts with the provided path prefix.
+            path_gt (str | None): All documents returned will have a path that is greater than the provided path.
+        Returns:
+            list[dict]: A list of dictionaries with the document information
+        """
         response = zeroentropy_client.documents.get_info_list(
             collection_name=collection_name, limit=limit, path_prefix=path_prefix, path_gt=path_gt
         )
@@ -83,11 +102,33 @@ def register_document_tools(mcp: FastMCP, zeroentropy_client: ZeroEntropy):
         return [doc.model_dump() for doc in response.documents]
 
     @mcp.tool()
-    async def delete_document(collection_name: str, path: str) -> None:
+    async def delete_document(collection_name: str, path: str) -> dict:
+        """
+        Delete a document from a collection
+        Args:
+            collection_name (str): The name of the collection to delete the document from.
+            path (str): The path of the document to delete.
+        Returns:
+            dict: A dictionary with a success key and a message key
+        """
         zeroentropy_client.documents.delete(collection_name=collection_name, path=path)
+        return {
+            "success": True,
+            "message": f"Document '{path}' deleted from collection '{collection_name}'"
+        }
 
 
     @mcp.tool()
     async def get_page_info(collection_name: str, path: str, page_index: int, include_content: bool = False) -> dict:
+        """
+        Get information about a page of a document
+        Args:
+            collection_name (str): The name of the collection to get the page from.
+            path (str): The path of the document to get the page from.
+            page_index (int): The index of the page to get the information about.
+            include_content (bool): Whether to include the content of the page. Defaults to False.
+        Returns:
+            dict: A dictionary with the page information
+        """
         response = zeroentropy_client.documents.get_page_info(collection_name=collection_name, path=path, page_index=page_index, include_content=include_content)
         return response.page.model_dump()
