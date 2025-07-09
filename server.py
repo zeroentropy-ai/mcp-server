@@ -2,14 +2,24 @@ from mcp.server.fastmcp import FastMCP
 from zeroentropy import ZeroEntropy
 from dotenv import load_dotenv
 from os import getenv
+import sys
 
 load_dotenv()
 
 mcp = FastMCP("zeroentropy")
 
-zeroentropy_client = ZeroEntropy(
-    api_key=getenv("ZEROENTROPY_API_KEY")
-)
+# Check if running in development mode
+api_key = getenv("ZEROENTROPY_API_KEY")
+if not api_key:
+    if len(sys.argv) > 1 and sys.argv[1] == "--dev":
+        print("Running in development mode without API key")
+        zeroentropy_client = None
+    else:
+        print("Error: ZEROENTROPY_API_KEY environment variable is required", file=sys.stderr)
+        print("For development, use: uv run server.py --dev", file=sys.stderr)
+        sys.exit(1)
+else:
+    zeroentropy_client = ZeroEntropy(api_key=api_key)
 
 @mcp.tool()
 async def get_collection_list() -> list[str]:
