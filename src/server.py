@@ -7,6 +7,7 @@ import sys
 from tools.collections import register_collection_tools
 from tools.documents import register_document_tools
 from tools.queries import register_query_tools
+from tools.models import register_model_tools
 
 load_dotenv()
 
@@ -28,6 +29,7 @@ else:
 register_collection_tools(mcp, zeroentropy_client)
 register_document_tools(mcp, zeroentropy_client)
 register_query_tools(mcp, zeroentropy_client)
+register_model_tools(mcp, zeroentropy_client)
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
