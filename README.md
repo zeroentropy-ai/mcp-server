@@ -9,13 +9,13 @@ uv sync
 *Run*
 
 ```bash
-uv run server.py
+uv run src/server.py
 ```
 
 To run the MCP server from browser:
 
 ```bash
-mcp dev server.py --dev
+mcp dev src/server.py --dev
 ```
 
 Add to claude code:
